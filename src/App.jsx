@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import Wrapper from "./components/Wrapper";
 import Screen from "./components/Screen";
 import ButtonBox from "./components/ButtonBox";
@@ -12,10 +14,16 @@ const buttonValues = [
 ];
 
 const App = () => {
+  let [calc, setCalc] = useState({
+    sign: "",
+    num: 0,
+    result: 0,
+  })
+
   return (
     <Wrapper>
       <Screen
-        value="0"
+        value={calc.num ? calc.num : calc.result}
       />
       <ButtonBox>
         {
@@ -26,7 +34,19 @@ const App = () => {
                 className={button === "=" ? "equals" : ""}
                 value={button}
                 onClick={() => {
-                  console.log(`${button} clicked!`)
+                  button === "C"
+                    ? resetClickHandler
+                    : button === "+-"
+                      ? invertClckHnadler
+                      : button === "%"
+                        ? percentCLickHandler
+                        : button === "="
+                          ? equalsCLickHandler
+                          : button === "/" || button === "X" || button === "-" || button === "+"
+                            ? signCLikHnadler
+                            : button === ","
+                              ? commaClickHndler
+                              : numCLickHnadler
                 }}
               />
             )
