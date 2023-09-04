@@ -10,7 +10,7 @@ const buttonValues = [
   [7, 8, 9, "X"],
   [4, 5, 6, "-"],
   [1, 2, 3, "+"],
-  [0, ",", "="],
+  [0, ".", "="],
 ];
 
 const App = () => {
@@ -29,19 +29,32 @@ const App = () => {
       setCalc({
         ...calc,
         num:
+          //prevent from entering two zeros
           calc.num === 0 && value === "0" ? 0
             : calc.num % 1 === 0 ? Number(calc.num + value)
               : calc.num + value,
         result:
+          //handle nagative numbers
           !calc.sign ? 0 : calc.result
       })
     }
-  }
+  };
+
+  const commaClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    setCalc({
+      ...calc,
+      num:
+        !calc.num.toString().includes(".") ? calc.num + value : calc.num
+    })
+  };
 
   return (
     <Wrapper>
       <Screen
-        value={calc.num}
+        value={calc.num ? calc.num : calc.result}
       />
       <ButtonBox>
         {
@@ -57,8 +70,8 @@ const App = () => {
                   //     : button === "%" ? percentCLickHandler
                   //       : button === "=" ? equalsCLickHandler
                   //         : button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
-                  //           : button === "," ? commaClickHandler
-                  numCLickHandler
+                  button === "." ? commaClickHandler
+                    : numCLickHandler
                 }
               />
             )
