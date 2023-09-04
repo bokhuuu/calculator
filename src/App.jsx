@@ -18,12 +18,12 @@ const App = () => {
     sign: "",
     num: 0,
     result: 0,
-  })
+  });
 
   const numCLickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-    console.log((Number(calc.num + value)))
+    console.log(value);
 
     if (calc.num.length < 16) {
       setCalc({
@@ -37,18 +37,33 @@ const App = () => {
           //handle nagative numbers
           !calc.sign ? 0 : calc.result
       })
-    }
+    };
   };
 
   const commaClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-
+    console.log(value)
     setCalc({
       ...calc,
       num:
+        //add comma to number if it is not already there
         !calc.num.toString().includes(".") ? calc.num + value : calc.num
-    })
+    });
+  };
+
+  const signClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+    console.log(value)
+
+    setCalc({
+      ...calc,
+      sign: value,
+      result:
+        !calc.result && calc.num ? calc.num : calc.result,
+      num: 0,
+    });
   };
 
   return (
@@ -69,9 +84,9 @@ const App = () => {
                   //   : button === "+-" ? invertClckHandler
                   //     : button === "%" ? percentCLickHandler
                   //       : button === "=" ? equalsCLickHandler
-                  //         : button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
-                  button === "." ? commaClickHandler
-                    : numCLickHandler
+                  button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
+                    : button === "." ? commaClickHandler
+                      : numCLickHandler
                 }
               />
             )
