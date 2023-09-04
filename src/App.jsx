@@ -10,7 +10,7 @@ const buttonValues = [
   [7, 8, 9, "X"],
   [4, 5, 6, "-"],
   [1, 2, 3, "+"],
-  [0, ".", "="],
+  [0, ",", "="],
 ];
 
 const App = () => {
@@ -20,10 +20,28 @@ const App = () => {
     result: 0,
   })
 
+  const numCLickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+    console.log((Number(calc.num + value)))
+
+    if (calc.num.length < 16) {
+      setCalc({
+        ...calc,
+        num:
+          calc.num === 0 && value === "0" ? 0
+            : calc.num % 1 === 0 ? Number(calc.num + value)
+              : calc.num + value,
+        result:
+          !calc.sign ? 0 : calc.result
+      })
+    }
+  }
+
   return (
     <Wrapper>
       <Screen
-        value={calc.num ? calc.num : calc.result}
+        value={calc.num}
       />
       <ButtonBox>
         {
@@ -33,21 +51,15 @@ const App = () => {
                 key={i}
                 className={button === "=" ? "equals" : ""}
                 value={button}
-                onClick={() => {
-                  button === "C"
-                    ? resetClickHandler
-                    : button === "+-"
-                      ? invertClckHnadler
-                      : button === "%"
-                        ? percentCLickHandler
-                        : button === "="
-                          ? equalsCLickHandler
-                          : button === "/" || button === "X" || button === "-" || button === "+"
-                            ? signCLikHnadler
-                            : button === ","
-                              ? commaClickHndler
-                              : numCLickHnadler
-                }}
+                onClick={
+                  // button === "C" ? resetClickHandler
+                  //   : button === "+-" ? invertClckHandler
+                  //     : button === "%" ? percentCLickHandler
+                  //       : button === "=" ? equalsCLickHandler
+                  //         : button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
+                  //           : button === "," ? commaClickHandler
+                  numCLickHandler
+                }
               />
             )
           })
