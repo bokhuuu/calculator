@@ -5,7 +5,7 @@ import Screen from "./components/Screen";
 import ButtonBox from "./components/ButtonBox";
 import Button from "./components/Button";
 
-const buttonValues = [
+const btnValues = [
   ["C", "+-", "%", "/"],
   [7, 8, 9, "X"],
   [4, 5, 6, "-"],
@@ -18,99 +18,98 @@ const toLocaleString = (num) =>
 
 const removeSpaces = (num) => num.toString().replace(/\s/g, "");
 
+const math = (a, b, sign) =>
+  sign === "+" ? a + b : sign === "-" ? a - b : sign === "X" ? a * b : a / b;
+
+const zeroDivisionError = "Can't divide with 0";
+
 const App = () => {
   let [calc, setCalc] = useState({
     sign: "",
     num: 0,
-    result: 0,
+    res: 0,
   });
 
-  const numCLickHandler = (e) => {
+  const numClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-    console.log(value);
-
-    if (calc.num.length < 16) {
+    if (removeSpaces(calc.num).length < 16) {
       setCalc({
         ...calc,
         num:
-          //prevent from entering two zeros
-          calc.num === 0 && value === "0" ? 0
-            : calc.num % 1 === 0 ? Number(calc.num + value)
-              : calc.num + value,
-        result:
-          //handle nagative numbers
-          !calc.sign ? 0 : calc.result
+          removeSpaces(calc.num) % 1 === 0 && !calc.num.toString().includes(".")
+            ? toLocaleString(Number(removeSpaces(calc.num + value)))
+            : toLocaleString(calc.num + value),
+        res: !calc.sign ? 0 : calc.res,
       });
-    };
+    }
   };
 
-  const commaClickHandler = (e) => {
+  const comaClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-    console.log(value)
+
     setCalc({
       ...calc,
-      num:
-        //add comma to number if it is not already there
-        !calc.num.toString().includes(".") ? calc.num + value : calc.num
+      num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
     });
   };
 
   const signClickHandler = (e) => {
-    e.preventDefault();
-    const value = e.target.innerHTML;
-    console.log(value);
-
     setCalc({
       ...calc,
-      sign: value,
-      result:
-        //save previous calculation result when changing sign 
-        !calc.result && calc.num ? calc.num : calc.result,
+      sign: e.target.innerHTML,
+      res: !calc.num
+        ? calc.res
+        : !calc.res
+          ? calc.num
+          : toLocaleString(
+            math(
+              Number(removeSpaces(calc.res)),
+              Number(removeSpaces(calc.num)),
+              calc.sign
+            )
+          ),
       num: 0,
     });
   };
 
-  const equalsCLickHandler = () => {
-    console.log("clicked")
+  const equalsClickHandler = () => {
     if (calc.sign && calc.num) {
-      const math = (a, b, sign) => {
-        sign === "+" ? a + b
-          : sign === "-" ? a - b
-            : sign === "X" ? a * b
-              : a / b
-
-        setCalc({
-          ...calc,
-          result:
-            calc.num === "0" && calc.sign === "/"
-              ? "can`t divide with 0"
-              : math(Number(calc.result), Number(calc.num), calc.sign),
-          sign: "",
-          num: 0,
-        });
-      };
-    };
+      setCalc({
+        ...calc,
+        res:
+          calc.num === "0" && calc.sign === "/"
+            ? zeroDivisionError
+            : toLocaleString(
+              math(
+                Number(removeSpaces(calc.res)),
+                Number(removeSpaces(calc.num)),
+                calc.sign
+              )
+            ),
+        sign: "",
+        num: 0,
+      });
+    }
   };
 
-  const percentCLickHandler = () => {
-    let num = calc.num ? parseFloat(calc.num) : 0;
-    let result = calc.result ? parseFloat(calc.result) : 0;
-
+  const invertClickHandler = () => {
     setCalc({
       ...calc,
-      num: (num /= Math.pow(100, 1)),
-      result: (result /= Math.pow(100, 1)),
+      num: calc.num ? toLocaleString(removeSpaces(calc.num) * -1) : 0,
+      res: calc.res ? toLocaleString(removeSpaces(calc.res) * -1) : 0,
       sign: "",
     });
   };
 
-  const invertClckHandler = () => {
+  const percentClickHandler = () => {
+    let num = calc.num ? parseFloat(removeSpaces(calc.num)) : 0;
+    let res = calc.res ? parseFloat(removeSpaces(calc.res)) : 0;
     setCalc({
       ...calc,
-      num: calc.num ? calc.num * -1 : 0,
-      result: calc.result ? calc.result * -1 : 0,
+      num: (num /= Math.pow(100, 1)),
+      res: (res /= Math.pow(100, 1)),
       sign: "",
     });
   };
@@ -119,39 +118,48 @@ const App = () => {
     setCalc({
       ...calc,
       sign: "",
-      result: 0,
+      num: 0,
+      res: 0,
     });
   };
 
+  const buttonClickHandler = (e, btn) => {
+    btn === "C" || calc.res === zeroDivisionError
+      ? resetClickHandler()
+      : btn === "+-"
+        ? invertClickHandler()
+        : btn === "%"
+          ? percentClickHandler()
+          : btn === "="
+            ? equalsClickHandler()
+            : btn === "/" || btn === "X" || btn === "-" || btn === "+"
+              ? signClickHandler(e)
+              : btn === "."
+                ? comaClickHandler(e)
+                : numClickHandler(e)
+  }
+
   return (
     <Wrapper>
-      <Screen
-        value={calc.num ? calc.num : calc.result}
-      />
+      <Screen value={calc.num ? calc.num : calc.res} />
       <ButtonBox>
-        {
-          buttonValues.flat().map((button, i) => {
-            return (
-              <Button
-                key={i}
-                className={button === "=" ? "equals" : ""}
-                value={button}
-                onClick={
-                  button === "C" ? resetClickHandler
-                    : button === "+-" ? invertClckHandler
-                      : button === "%" ? percentCLickHandler
-                        : button === "=" ? equalsCLickHandler
-                          : button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
-                            : button === "." ? commaClickHandler
-                              : numCLickHandler
-                }
-              />
-            )
-          })
-        }
+        {btnValues.flat().map((btn, i) => {
+          return (
+            <Button
+              key={i}
+              className=
+              {
+                btn === "=" ? "equals" : "" ||
+                  btn === "C" ? "reset" : ""
+              }
+              value={btn}
+              onClick={(e) => buttonClickHandler(e, btn)}
+            />
+          );
+        })}
       </ButtonBox>
     </Wrapper>
-  )
+  );
 };
 
 export default App;
