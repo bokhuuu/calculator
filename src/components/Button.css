@@ -19,5 +19,13 @@ button:hover {
 }
 
 .equals:hover {
-    background-color: rgb(47, 110, 112);
+    background-color: green;
+}
+
+.reset {
+    background-color: rgb(30, 178, 184);
+}
+
+.reset:hover {
+    background-color: red;
 }
