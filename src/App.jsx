@@ -101,7 +101,14 @@ const App = () => {
     });
   };
 
-
+  const invertClckHandler = () => {
+    setCalc({
+      ...calc,
+      num: calc.num ? calc.num * -1 : 0,
+      result: calc.result ? calc.result * -1 : 0,
+      sign: "",
+    });
+  };
 
   return (
     <Wrapper>
