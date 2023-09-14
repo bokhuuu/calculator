@@ -36,7 +36,7 @@ const App = () => {
         result:
           //handle nagative numbers
           !calc.sign ? 0 : calc.result
-      })
+      });
     };
   };
 
@@ -55,16 +55,53 @@ const App = () => {
   const signClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-    console.log(value)
+    console.log(value);
 
     setCalc({
       ...calc,
       sign: value,
       result:
+        //save previous calculation result when changing sign 
         !calc.result && calc.num ? calc.num : calc.result,
       num: 0,
     });
   };
+
+  const equalsCLickHandler = () => {
+    console.log("clicked")
+    if (calc.sign && calc.num) {
+      const math = (a, b, sign) => {
+        sign === "+" ? a + b
+          : sign === "-" ? a - b
+            : sign === "X" ? a * b
+              : a / b
+
+        setCalc({
+          ...calc,
+          result:
+            calc.num === "0" && calc.sign === "/"
+              ? "can`t divide with 0"
+              : math(Number(calc.result), Number(calc.num), calc.sign),
+          sign: "",
+          num: 0,
+        });
+      };
+    };
+  };
+
+  const percentCLickHandler = () => {
+    let num = calc.num ? parseFloat(calc.num) : 0;
+    let result = calc.result ? parseFloat(calc.result) : 0;
+
+    setCalc({
+      ...calc,
+      num: (num /= Math.pow(100, 1)),
+      result: (result /= Math.pow(100, 1)),
+      sign: "",
+    });
+  };
+
+
 
   return (
     <Wrapper>
@@ -81,12 +118,12 @@ const App = () => {
                 value={button}
                 onClick={
                   // button === "C" ? resetClickHandler
-                  //   : button === "+-" ? invertClckHandler
-                  //     : button === "%" ? percentCLickHandler
-                  //       : button === "=" ? equalsCLickHandler
-                  button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
-                    : button === "." ? commaClickHandler
-                      : numCLickHandler
+                  button === "+-" ? invertClckHandler
+                    : button === "%" ? percentCLickHandler
+                      : button === "=" ? equalsCLickHandler
+                        : button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
+                          : button === "." ? commaClickHandler
+                            : numCLickHandler
                 }
               />
             )
