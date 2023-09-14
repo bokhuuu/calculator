@@ -13,6 +13,11 @@ const buttonValues = [
   [0, ".", "="],
 ];
 
+const toLocaleString = (num) =>
+  String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1 ");
+
+const removeSpaces = (num) => num.toString().replace(/\s/g, "");
+
 const App = () => {
   let [calc, setCalc] = useState({
     sign: "",
