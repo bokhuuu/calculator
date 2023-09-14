@@ -110,6 +110,14 @@ const App = () => {
     });
   };
 
+  const resetClickHandler = () => {
+    setCalc({
+      ...calc,
+      sign: "",
+      result: 0,
+    });
+  };
+
   return (
     <Wrapper>
       <Screen
@@ -124,13 +132,13 @@ const App = () => {
                 className={button === "=" ? "equals" : ""}
                 value={button}
                 onClick={
-                  // button === "C" ? resetClickHandler
-                  button === "+-" ? invertClckHandler
-                    : button === "%" ? percentCLickHandler
-                      : button === "=" ? equalsCLickHandler
-                        : button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
-                          : button === "." ? commaClickHandler
-                            : numCLickHandler
+                  button === "C" ? resetClickHandler
+                    : button === "+-" ? invertClckHandler
+                      : button === "%" ? percentCLickHandler
+                        : button === "=" ? equalsCLickHandler
+                          : button === "/" || button === "X" || button === "-" || button === "+" ? signClickHandler
+                            : button === "." ? commaClickHandler
+                              : numCLickHandler
                 }
               />
             )
