@@ -21,7 +21,7 @@ const removeSpaces = (num) => num.toString().replace(/\s/g, "");
 const math = (a, b, sign) =>
   sign === "+" ? a + b : sign === "-" ? a - b : sign === "X" ? a * b : a / b;
 
-const zeroDivisionError = "Can't divide with 0";
+const zeroDivisionError = "can't divide with 0";
 
 const App = () => {
   let [calc, setCalc] = useState({
