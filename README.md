@@ -23,7 +23,7 @@ npm install
 
 Start the development server:  
 npm run dev  
-The calculator app will be available at http://localhost:5173.  
+The calculator app will be available at http://localhost:5174.  
 
 ## Contributing
 Contributions are welcome! Please feel free to open an issue or submit a pull request if you have any suggestions or improvements.  
