@@ -10,15 +10,17 @@ Invert (+-)
 Clear (C)  
 To use the calculator, simply enter your numbers and operators, and click the "=" button to calculate the result.
 
-##Link and Screenshot  
+## Link and Screenshot  
 [Go Live](https://calculator-deployed.netlify.app/)  
 ![Screenshot](src/assets/screenshot-calculator.png)
 
 ## Installation
 Clone this repository:  
 git clone https://github.com/bokhuuu/calculator.git  
+
 Install the dependencies:  
-npm install  
+npm install
+
 Start the development server:  
 npm run dev  
 The calculator app will be available at http://localhost:5173.  
